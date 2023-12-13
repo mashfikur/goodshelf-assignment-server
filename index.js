@@ -8,9 +8,12 @@ const port = process.env.NODE_ENV || 5000;
 app.use(cors());
 app.use(express.json());
 
-app.get("/api/v1/home", async (req, res) => {
+
+// home route
+app.get("/", async (req, res) => {
   res.send("Server is Successfully running");
 });
+
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.rnoho8k.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -25,11 +28,14 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    
     // database and collections
     const productsCollections = client.db("goodShelf").collection("products");
 
     // GET Requests
     app.get("/api/v1/products/section/:name", async (req, res) => {
+
+      // getting section name of products as params
       const sectionName = req.params.name;
 
       const result = await productsCollections
@@ -37,6 +43,7 @@ async function run() {
         .toArray();
 
       res.send(result);
+
     });
 
     // Send a ping to confirm a successful connection
